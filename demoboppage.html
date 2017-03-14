@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo BOP</title>
+
+    <script src="require.js"></script>
+    <script>
+        require(['demobopplugin'], function (bop) {
+            bop.setAmount(100);
+            bop.setCurrency('USD');
+
+//            bop.setData({
+//                id: 'bop-form',
+//                amount: 100.0,
+//                currency: 'USD'
+//            });
+
+            bop.show();
+
+            if (parent) {
+                parent.bopGetData = function () {
+                    return bop.getData();
+                };
+
+                parent.bopIsValid = function () {
+                    return bop.isValid();
+                };
+
+                parent.bopErrors = function () {
+                    return bop.errors();
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+Preamble of content on page before the BoP control.
+
+<div id="bop-form"></div>
+
+Postamble of content on page after the BoP control.
+
+<input type="button" id="ProceedBtn" value="Proceed"/>
+<input type="button" id="StateBtn" value="Show"/>
+
+<script>
+    document.getElementById("ProceedBtn").addEventListener("click", proceedBtn);
+    document.getElementById("StateBtn").addEventListener("click", showBtn);
+
+    function proceedBtn() {
+        if (bopIsValid()) {
+            alert('BoP form is valid');
+        } else {
+            alert(bopErrors().join('\n'));
+        }
+    }
+
+    function showBtn() {
+        alert(JSON.stringify(bopGetData()));
+    }
+</script>
+</body>
+</html>
